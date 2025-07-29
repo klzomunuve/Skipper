@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Results</title>
+</head>
+<body>
+  <h2>Your Exam Results</h2>
+  <table border="1">
+    <tr>
+      <th>Subject</th>
+      <th>Marks</th>
+    </tr>
+    {% for result in results %}
+      <tr>
+        <td>{{ result[0] }}</td>
+        <td>{{ result[1] }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Registered Units</title>
+</head>
+<body>
+  <h2>Registered Units</h2>
+  <ul>
+    {% for unit in units %}
+      <li>{{ unit[0] }}</li>
+    {% endfor %}
+  </ul>
+  <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>

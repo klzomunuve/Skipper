@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Dashboard</title>
+</head>
+<body>
+  <h2>Welcome, {{ student_id }}</h2>
+  <ul>
+    <li><a href="/view_units">View Registered Units</a></li>
+    <li>
+      <form method="POST" action="/register_unit">
+        <input type="text" name="unit_name" placeholder="Enter Unit Name" required>
+        <button type="submit">Register Unit</button>
+      </form>
+    </li>
+    <li><a href="/view_fees">View Fee Receipts</a></li>
+    <li><a href="/view_results">View Results</a></li>
+    <li><a href="/">Logout</a></li>
+  </ul>
+</body>
+</html>

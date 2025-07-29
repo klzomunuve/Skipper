@@ -1,0 +1,83 @@
+from flask import Flask, render_template, request, redirect, url_for, session import sqlite3 import os
+
+app = Flask(name) app.secret_key = 'alfred_secret_key'
+
+----- DATABASE SETUP -----
+
+def init_db(): conn = sqlite3.connect('database.db') c = conn.cursor()
+
+c.execute('''CREATE TABLE IF NOT EXISTS students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    password TEXT NOT NULL
+)''')
+
+c.execute('''CREATE TABLE IF NOT EXISTS units (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id TEXT,
+    unit_name TEXT
+)''')
+
+c.execute('''CREATE TABLE IF NOT EXISTS fees (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id TEXT,
+    amount_paid INTEGER,
+    receipt_number TEXT,
+    date_paid TEXT
+)''')
+
+c.execute('''CREATE TABLE IF NOT EXISTS results (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id TEXT,
+    subject TEXT,
+    marks INTEGER
+)''')
+
+conn.commit()
+conn.close()
+
+----- ROUTES -----
+
+@app.route('/') def home(): return render_template('login.html')
+
+@app.route('/login', methods=['POST']) def login(): student_id = request.form['student_id'] password = request.form['password']
+
+conn = sqlite3.connect('database.db')
+c = conn.cursor()
+c.execute("SELECT * FROM students WHERE student_id=? AND password=?", (student_id, password))
+student = c.fetchone()
+conn.close()
+
+if student:
+    session['student_id'] = student_id
+    return redirect('/dashboard')
+else:
+    return "Login failed. Check credentials."
+
+@app.route('/dashboard') def dashboard(): if 'student_id' not in session: return redirect('/') return render_template('dashboard.html', student_id=session['student_id'])
+
+@app.route('/register_unit', methods=['POST']) def register_unit(): unit_name = request.form['unit_name'] student_id = session['student_id'] conn = sqlite3.connect('database.db') c = conn.cursor() c.execute("INSERT INTO units (student_id, unit_name) VALUES (?, ?)", (student_id, unit_name)) conn.commit() conn.close() return redirect('/dashboard')
+
+@app.route('/view_units') def view_units(): student_id = session['student_id'] conn = sqlite3.connect('database.db') c = conn.cursor() c.execute("SELECT unit_name FROM units WHERE student_id=?", (student_id,)) units = c.fetchall() conn.close() return render_template('units.html', units=units)
+
+@app.route('/view_fees') def view_fees(): student_id = session['student_id'] conn = sqlite3.connect('database.db') c = conn.cursor() c.execute("SELECT amount_paid, receipt_number, date_paid FROM fees WHERE student_id=?", (student_id,)) payments = c.fetchall() conn.close() return render_template('receipt.html', payments=payments)
+
+@app.route('/view_results') def view_results(): student_id = session['student_id'] conn = sqlite3.connect('database.db') c = conn.cursor() c.execute("SELECT subject, marks FROM results WHERE student_id=?", (student_id,)) results = c.fetchall() conn.close() return render_template('results.html', results=results)
+
+----- ADMIN PANEL -----
+
+@app.route('/admin') def admin_login_page(): return render_template('admin_login.html')
+
+@app.route('/admin_login', methods=['POST']) def admin_login(): username = request.form['username'] password = request.form['password'] if username == "admin" and password == "admin123": session['admin'] = True return redirect('/admin_dashboard') return "Invalid admin credentials"
+
+@app.route('/admin_dashboard') def admin_dashboard(): if 'admin' not in session: return redirect('/admin') return render_template('admin_dashboard.html')
+
+@app.route('/add_student', methods=['POST']) def add_student(): if 'admin' not in session: return redirect('/admin') student_id = request.form['student_id'] name = request.form['name'] password = request.form['password'] conn = sqlite3.connect('database.db') c = conn.cursor() c.execute("INSERT INTO students (student_id, name, password) VALUES (?, ?, ?)", (student_id, name, password)) conn.commit() conn.close() return redirect('/admin_dashboard')
+
+@app.route('/upload_result', methods=['POST']) def upload_result(): if 'admin' not in session: return redirect('/admin') student_id = request.form['student_id'] subject = request.form['subject'] marks = request.form['marks'] conn = sqlite3.connect('database.db') c = conn.cursor() c.execute("INSERT INTO results (student_id, subject, marks) VALUES (?, ?, ?)", (student_id, subject, marks)) conn.commit() conn.close() return redirect('/admin_dashboard')
+
+@app.route('/record_payment', methods=['POST']) def record_payment(): if 'admin' not in session: return redirect('/admin') student_id = request.form['student_id'] amount_paid = request.form['amount_paid'] receipt_number = request.form['receipt_number'] date_paid = request.form['date_paid'] conn = sqlite3.connect('database.db') c = conn.cursor() c.execute("INSERT INTO fees (student_id, amount_paid, receipt_number, date_paid) VALUES (?, ?, ?, ?)", (student_id, amount_paid, receipt_number, date_paid)) conn.commit() conn.close() return redirect('/admin_dashboard')
+
+if name == 'main': init_db() app.run(debug=True)
+

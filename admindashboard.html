@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+</head>
+<body>
+  <h2>Admin Dashboard</h2>
+
+  <h3>Add Student</h3>
+  <form method="POST" action="/add_student">
+    <input type="text" name="student_id" placeholder="Student ID" required><br>
+    <input type="text" name="name" placeholder="Name" required><br>
+    <input type="password" name="password" placeholder="Password" required><br>
+    <button type="submit">Add Student</button>
+  </form>
+
+  <h3>Upload Result</h3>
+  <form method="POST" action="/upload_result">
+    <input type="text" name="student_id" placeholder="Student ID" required><br>
+    <input type="text" name="subject" placeholder="Subject" required><br>
+    <input type="number" name="marks" placeholder="Marks" required><br>
+    <button type="submit">Upload Result</button>
+  </form>
+
+  <h3>Record Fee Payment</h3>
+  <form method="POST" action="/record_payment">
+    <input type="text" name="student_id" placeholder="Student ID" required><br>
+    <input type="number" name="amount_paid" placeholder="Amount Paid" required><br>
+    <input type="text" name="receipt_number" placeholder="Receipt #" required><br>
+    <input type="text" name="date_paid" placeholder="Date (e.g. 2025-07-29)" required><br>
+    <button type="submit">Record Payment</button>
+  </form>
+</body>
+</html>

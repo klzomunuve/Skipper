@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fee Receipts</title>
+</head>
+<body>
+  <h2>Your Payment Receipts</h2>
+  <table border="1">
+    <tr>
+      <th>Amount Paid</th>
+      <th>Receipt Number</th>
+      <th>Date</th>
+    </tr>
+    {% for payment in payments %}
+      <tr>
+        <td>{{ payment[0] }}</td>
+        <td>{{ payment[1] }}</td>
+        <td>{{ payment[2] }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>
