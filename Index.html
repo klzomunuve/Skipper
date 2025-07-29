@@ -1,0 +1,169 @@
+templates/
+
+├── login.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Alfred Academy</title>
+</head>
+<body>
+    <h2>Student Login</h2>
+    <form method="POST" action="/login">
+        <label>Student ID:</label><br>
+        <input type="text" name="student_id" required><br><br>
+        <label>Password:</label><br>
+        <input type="password" name="password" required><br><br>
+        <input type="submit" value="Login">
+    </form>
+    <p>Admin? <a href="/admin">Login here</a></p>
+</body>
+</html>
+
+├── dashboard.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Alfred Academy</title>
+</head>
+<body>
+    <h2>Welcome, {{ student_id }}</h2>
+    <form method="POST" action="/register_unit">
+        <input type="text" name="unit_name" placeholder="Enter unit name" required>
+        <input type="submit" value="Register Unit">
+    </form>
+    <ul>
+        <li><a href="/view_units">View Registered Units</a></li>
+        <li><a href="/view_fees">View Fees Receipt</a></li>
+        <li><a href="/view_results">View Results</a></li>
+    </ul>
+</body>
+</html>
+
+├── units.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Units - Alfred Academy</title>
+</head>
+<body>
+    <h2>Registered Units</h2>
+    <ul>
+        {% for unit in units %}
+            <li>{{ unit[0] }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>
+
+├── receipt.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fees Receipt - Alfred Academy</title>
+</head>
+<body>
+    <h2>Fees Payment History</h2>
+    <table border="1">
+        <tr>
+            <th>Amount Paid</th>
+            <th>Receipt Number</th>
+            <th>Date Paid</th>
+        </tr>
+        {% for payment in payments %}
+        <tr>
+            <td>{{ payment[0] }}</td>
+            <td>{{ payment[1] }}</td>
+            <td>{{ payment[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>
+
+├── results.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results - Alfred Academy</title>
+</head>
+<body>
+    <h2>Academic Results</h2>
+    <table border="1">
+        <tr>
+            <th>Subject</th>
+            <th>Marks</th>
+        </tr>
+        {% for result in results %}
+        <tr>
+            <td>{{ result[0] }}</td>
+            <td>{{ result[1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>
+
+├── admin_login.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login - Alfred Academy</title>
+</head>
+<body>
+    <h2>Admin Login</h2>
+    <form method="POST" action="/admin_login">
+        <label>Username:</label><br>
+        <input type="text" name="username" required><br><br>
+        <label>Password:</label><br>
+        <input type="password" name="password" required><br><br>
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
+
+└── admin_dashboard.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - Alfred Academy</title>
+</head>
+<body>
+    <h2>Admin Dashboard</h2>
+
+    <h3>Add Student</h3>
+    <form method="POST" action="/add_student">
+        <input type="text" name="student_id" placeholder="Student ID" required>
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="submit" value="Add Student">
+    </form>
+
+    <h3>Upload Result</h3>
+    <form method="POST" action="/upload_result">
+        <input type="text" name="student_id" placeholder="Student ID" required>
+        <input type="text" name="subject" placeholder="Subject" required>
+        <input type="number" name="marks" placeholder="Marks" required>
+        <input type="submit" value="Upload Result">
+    </form>
+
+    <h3>Record Payment</h3>
+    <form method="POST" action="/record_payment">
+        <input type="text" name="student_id" placeholder="Student ID" required>
+        <input type="number" name="amount_paid" placeholder="Amount Paid" required>
+        <input type="text" name="receipt_number" placeholder="Receipt Number" required>
+        <input type="date" name="date_paid" required>
+        <input type="submit" value="Record Payment">
+    </form>
+</body>
+</html>
+
